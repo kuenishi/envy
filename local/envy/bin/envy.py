@@ -55,7 +55,7 @@ class Fetcher:
             basename = tarball[0:-7]
             return '%s/%s' % (self.destdir, basename)
         elif tarball[-4:] == '.tgz':
-            basename = tarball[0:-5]
+            basename = tarball[0:-4]
             return '%s/%s' % (self.destdir, basename)
 
     def fetch_git(self):
