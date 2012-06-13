@@ -100,7 +100,7 @@ def build_and_install(srcdir):
         # run make && make install
         subprocess.check_call(['make'])
         subprocess.check_call(['make', 'install'])
-        os.chdir(curdir)
+        return os.chdir(curdir)
     except: pass
     try:
         os.stat('wscript')
@@ -108,24 +108,26 @@ def build_and_install(srcdir):
         # run make && make install
         subprocess.check_call(['./waf'])
         subprocess.check_call(['./waf', 'install'])
-        os.chdir(curdir)
+        return os.chdir(curdir)
     except: pass
     try:
         os.stat('setup.py')
         # run make && make install
         subprocess.check_call(['python', 'setup.py', 'install', '--prefix=%s'%prefix])
-        os.chdir(curdir)
+        return os.chdir(curdir)
     except: pass
-        
+    print("Failed on build/installing %s. Try yourself." % srcdir )
+    exit(-1)
 
 def install(name):
     print('installing %s' % name)
-    resource_file = '%s/local/share/packages.json' % os.environ['ENVY_HOME']
+    resource_file = '%s/local/envy/packages.json' % os.environ['ENVY_HOME']
     #print(resource_file)
     v = json.load(open(resource_file))
     url = v.get(name)
     package_name = ''
     if url is None: url = name
+    # elif type(url) == type({}):
     else: package_name = name
     # FIXME: if there's tarball or git repository existing , do not fetch again
     path = fetch(url, name)

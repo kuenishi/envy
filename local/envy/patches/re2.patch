@@ -1,0 +1,12 @@
+diff -r c79416ca4228 Makefile
+--- a/Makefile	Tue May 29 11:50:48 2012 -0400
++++ b/Makefile	Wed Jun 13 23:59:48 2012 +0900
+@@ -20,7 +20,7 @@
+ 
+ # Variables mandated by GNU, the arbiter of all good taste on the internet.
+ # http://www.gnu.org/prep/standards/standards.html
+-prefix=/usr/local
++prefix=$(ENVY_HOME)/local
+ exec_prefix=$(prefix)
+ bindir=$(exec_prefix)/bin
+ includedir=$(prefix)/include
