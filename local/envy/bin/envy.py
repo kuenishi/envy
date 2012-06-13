@@ -33,9 +33,10 @@ def help():
     print('help: ... ')
 
 class Fetcher:
-    def __init__(self, url, destdir):
+    def __init__(self, url, destdir, name = ''):
         self.url = url
         self.destdir = destdir
+        self.name = name
 
     def fetch(self):
         if self.url[:7]   == 'http://': return self.fetch_http()
@@ -57,39 +58,84 @@ class Fetcher:
         elif tarball[-4:] == '.tgz':
             basename = tarball[0:-4]
             return '%s/%s' % (self.destdir, basename)
+        # FIXME: .bz2 case, .zip case
 
     def fetch_git(self):
+        curdir = os.getcwd()
         os.chdir(self.destdir)
         subprocess.call(['git', 'clone', self.url])
         basename = self.url.split('/')[-1][:-4]
         srcdir = '%s/%s' % (self.destdir, basename)
+        os.chdir(curdir)
         return srcdir
 
-def fetch(url):
+    def fetch_hg(self):
+        curdir = os.getcwd()
+        os.chdir(self.destdir)
+        url = 'http%s' % self.url[2:]
+        subprocess.call(['hg', 'clone', url, self.name])
+        basename = self.name
+        if self.name == '':
+            basename = self.url.split('/')[-1]
+        srcdir = '%s/%s' % (self.destdir, basename)
+        os.chdir(curdir)
+        return srcdir
+
+def fetch(url, name = ''):
     srcdir = get_basedir('local/src')
     try: os.mkdir(srcdir)
     except: pass
-    f = Fetcher(url, srcdir)
+    f = Fetcher(url, srcdir, name)
     return f.fetch()
 
-def build(srcdir):
+def build_and_install(srcdir):
+    curdir = os.getcwd()
     os.chdir(srcdir)
     print(srcdir)
     prefix = get_basedir('local')
-    subprocess.check_call(['./configure', '--prefix=%s'%prefix])
-    # run make && make install
-    subprocess.check_call(['make'])
-    return subprocess.check_call(['make', 'install'])
+    # FIXME: find one of configure, wscript, setup.py and try 
+    try:
+        os.stat('configure')
+        subprocess.check_call(['./configure', '--prefix=%s'%prefix])
+        # run make && make install
+        subprocess.check_call(['make'])
+        subprocess.check_call(['make', 'install'])
+        os.chdir(curdir)
+    except: pass
+    try:
+        os.stat('wscript')
+        subprocess.check_call(['./waf', '--prefix=%s'%prefix])
+        # run make && make install
+        subprocess.check_call(['./waf'])
+        subprocess.check_call(['./waf', 'install'])
+        os.chdir(curdir)
+    except: pass
+    try:
+        os.stat('setup.py')
+        # run make && make install
+        subprocess.check_call(['python', 'setup.py', 'install', '--prefix=%s'%prefix])
+        os.chdir(curdir)
+    except: pass
+        
 
 def install(name):
     print('installing %s' % name)
     resource_file = '%s/local/share/packages.json' % os.environ['ENVY_HOME']
     #print(resource_file)
     v = json.load(open(resource_file))
-    url = v[name]
-    path = fetch(url)
-    return build(path)
+    url = v.get(name)
+    package_name = ''
+    if url is None: url = name
+    else: package_name = name
+    # FIXME: if there's tarball or git repository existing , do not fetch again
+    path = fetch(url, name)
+    return build_and_install(path)
 
+
+'''
+no upgrade, update, uninstall command
+TODO: dependency description and resolution ? is it too much?
+'''
 if __name__ == '__main__':
     cmd = None
     if len(sys.argv) == 1:
@@ -100,8 +146,7 @@ if __name__ == '__main__':
     if cmd == 'help':
         help()
     elif cmd == 'install' and len(sys.argv) > 2:
-        # read local/share/envy_resource.json
-        # look for req
+        # read local/share/envy_resource.json and find what to fetch
         install(sys.argv[2])
 
     else:

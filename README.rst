@@ -30,3 +30,10 @@ Author
 ------
 
 @kuenishi
+
+
+Topics
+------
+
+- for re2, --prefix= should be given to 'make' ; http://code.google.com/p/re2/issues/detail?id=22
+- for zookeeper, how --enable-zookeeper can be chosen from envy install
