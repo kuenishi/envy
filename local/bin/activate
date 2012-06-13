@@ -6,6 +6,7 @@ export PATH=$ENVY_BASE/local/bin:$PATH
 export ENVY_HOME=$ENVY_BASE
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ENVY_BASE/local/lib
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$ENVY_BASE/local/lib
 export C_INCLUDE_PATH=$ENVY_BASE/local/include
 export CPLUS_INCLUDE_PATH=$ENVY_BASE/local/include
 
