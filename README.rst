@@ -10,7 +10,16 @@ Usage
 ::
 
   $ git clone git://github.com/kuenish/envy.git
-  $ source local/bin/activate
+  $ cd envy
+  $ source local/envy/activate
+  (envy)$
+
+Enjoy seperated life!
+
+Version
+-------
+
+0.0.1
 
 License
 -------

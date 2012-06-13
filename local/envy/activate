@@ -11,3 +11,4 @@ export C_INCLUDE_PATH=$ENVY_BASE/local/include
 export CPLUS_INCLUDE_PATH=$ENVY_BASE/local/include
 
 export PKG_CONFIG_PATH=$ENVY_BASE/local/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig
+export PS1=(envy)$PS1
