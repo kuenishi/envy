@@ -44,8 +44,8 @@ class Fetcher:
         else: return self.fetch_local()
 
     def fetch_http(self):
-        subprocess.call(['wget', url, '--directory-prefix=%s'%self.destdir])
-        self.filename = url.split('/')[-1]
+        subprocess.call(['wget', self.url, '--directory-prefix=%s'%self.destdir])
+        filename = self.url.split('/')[-1]
         return self.deflate(filename)
 
     def deflate(self,tarball):

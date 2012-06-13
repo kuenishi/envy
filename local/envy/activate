@@ -2,7 +2,7 @@
 
 ENVY_BASE=$(pwd)
 
-export PATH=$ENVY_BASE/local/bin:$PATH
+export PATH=$ENVY_BASE/local/bin:$ENVY_BASE/local/envy/bin:$PATH
 export ENVY_HOME=$ENVY_BASE
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ENVY_BASE/local/lib
