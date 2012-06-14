@@ -7,6 +7,8 @@ Manage your own virtual environments easily
 Usage
 -----
 
+Requires python (maybe >= 2.6) and wget.
+
 ::
 
   $ git clone git://github.com/kuenish/envy.git
