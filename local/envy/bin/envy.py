@@ -30,7 +30,16 @@ def get_basedir(relative = None):
     else:                return '%s/%s' % (base, relative)
 
 def help():
-    print('help: ... ')
+    print('envy 0.0.1')
+    print('commands are: help list install')
+
+def list():
+    resource_file = '%s/local/envy/packages.json' % os.environ['ENVY_HOME']
+    #print(resource_file)
+    v = json.load(open(resource_file))
+    for k,v in v.iteritems():
+        print("%s\t\t%s" % (k, v))
+    
 
 class Fetcher:
     def __init__(self, url, destdir, name = ''):
@@ -134,7 +143,6 @@ def install(name):
     path = fetch(url, name)
     return build_and_install(path)
 
-
 '''
 no upgrade, update, uninstall command
 TODO: dependency description and resolution ? is it too much?
@@ -146,11 +154,12 @@ if __name__ == '__main__':
     else:
         cmd = sys.argv[1]
 
-    if cmd == 'help':
-        help()
+    if cmd == 'help':   help()
+    elif cmd == 'list': list()
+
     elif cmd == 'install' and len(sys.argv) > 2:
         # read local/share/envy_resource.json and find what to fetch
         install(sys.argv[2])
 
     else:
-        print('error, assert!')
+        print('no such command: %s' % cmd)
