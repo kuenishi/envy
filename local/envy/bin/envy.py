@@ -40,6 +40,7 @@ class Fetcher:
 
     def fetch(self):
         if self.url[:7]   == 'http://': return self.fetch_http()
+        if self.url[:8]   == 'https://': return self.fetch_http()
         elif self.url[:6] == 'git://' : return self.fetch_git()
         elif self.url[:5] == 'hg://'  : return self.fetch_hg()
         else: return self.fetch_local()

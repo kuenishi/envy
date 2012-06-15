@@ -4,8 +4,9 @@
   "python3": "http://www.python.org/ftp/python/3.2.3/Python-3.2.3.tgz",
   "ruby1.9": "http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.gz",
 
-  "pficommon": "git://github.com/pfi/pficommon.git",
+  "pficommon": "https://github.com/pfi/pficommon/tarball/master",
   "jubatus": "git://github.com/jubatus/jubatus.git",
+  "zookeeper": "http://mirror.uoregon.edu/apache/zookeeper/zookeeper-3.4.3/zookeeper-3.4.3.tar.gz",
   "mercurial": "http://mercurial.selenic.com/release/mercurial-2.2.2.tar.gz",
   "re2": "hg://re2.googlecode.com/hg"
 }
