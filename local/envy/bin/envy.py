@@ -3,6 +3,8 @@
 import sys, os
 import json
 import subprocess
+import shutil
+import stat
 
 '''
 envy_install http://ham.egg.com/spam-0.1.1.tar.gz
@@ -57,18 +59,7 @@ class Fetcher:
     def fetch_http(self):
         subprocess.call(['wget', self.url, '--directory-prefix=%s'%self.destdir])
         filename = self.url.split('/')[-1]
-        return self.deflate(filename)
-
-    def deflate(self,tarball):
-        subprocess.call(['tar', 'xzf', '%s/%s' % (self.destdir, tarball),
-                         '-C', self.destdir])
-        if tarball[-6:] == 'tar.gz':
-            basename = tarball[0:-7]
-            return '%s/%s' % (self.destdir, basename)
-        elif tarball[-4:] == '.tgz':
-            basename = tarball[0:-4]
-            return '%s/%s' % (self.destdir, basename)
-        # FIXME: .bz2 case, .zip case
+        return filename
 
     def fetch_git(self):
         curdir = os.getcwd()
@@ -91,12 +82,52 @@ class Fetcher:
         os.chdir(curdir)
         return srcdir
 
-def fetch(url, name = ''):
-    srcdir = get_basedir('local/src')
-    try: os.mkdir(srcdir)
+        
+
+def remove(name):
+    work_dir = '%s/local/src/%s' % (os.environ['ENVY_HOME'], name)
+    shutil.rmtree(work_dir)
+
+def work_dir(name):
+    return '%s/local/src/%s' % (os.environ['ENVY_HOME'], name)
+
+def create_work_dir(name):
+    path = work_dir(name)
+    try:
+        os.mkdir(path)
+        return path
     except: pass
-    f = Fetcher(url, srcdir, name)
+
+def check_work_dir(name):
+    path = work_dir(name)
+    try:    return len(os.listdir(path)) > 0
+    except: return 
+
+def fetch(name):
+    create_work_dir(name)
+    path = work_dir(name)
+
+    resource_file = '%s/local/envy/packages.json' % os.environ['ENVY_HOME']
+    #print(resource_file)
+    v = json.load(open(resource_file))
+    url = v.get(name)
+    package_name = ''
+    if url is None: url = name
+    # elif type(url) == type({}):
+    else: package_name = name
+
+    f = Fetcher(url, path, name)
     return f.fetch()
+
+def deflate(tarball, path='.'):
+    curdir = os.getcwd()
+    os.chdir(path)
+
+    #if tarball[-6:] == 'tar.gz':
+    #elif tarball[-4:] == '.tgz':
+    subprocess.call(['tar', 'xzf', tarball])
+
+    return os.chdir(curdir)
 
 def build_and_install(srcdir):
     curdir = os.getcwd()
@@ -129,37 +160,55 @@ def build_and_install(srcdir):
     print("Failed on build/installing %s. Try yourself." % srcdir )
     exit(-1)
 
+def find_ball(path):
+    for f in os.listdir(path):
+        if f[-6:] == 'tar.gz': return f
+        elif f[-4:] == '.tgz': return f
+        # FIXME: .bz2 case, .zip case
+    else:
+        raise "No tarball found"
+
+
 def install(name):
+    if not check_work_dir(name): fetch(name) # not yet fetched
+    path = work_dir(name)
+    tarball = find_ball(path)
+    print tarball, path
+    deflate(tarball, path)
     print('installing %s' % name)
-    resource_file = '%s/local/envy/packages.json' % os.environ['ENVY_HOME']
-    #print(resource_file)
-    v = json.load(open(resource_file))
-    url = v.get(name)
-    package_name = ''
-    if url is None: url = name
-    # elif type(url) == type({}):
-    else: package_name = name
-    # FIXME: if there's tarball or git repository existing , do not fetch again
-    path = fetch(url, name)
-    return build_and_install(path)
+    
+    for f in os.listdir(path):
+        srcdir_candidate = os.path.join(path, f)
+        if stat.S_ISDIR(os.stat(srcdir_candidate).st_mode):
+            return build_and_install(srcdir_candidate)
 
 '''
 no upgrade, update, uninstall command
 TODO: dependency description and resolution ? is it too much?
 '''
 if __name__ == '__main__':
-    cmd = None
+    srcdir = get_basedir('local/src')
+    try: os.mkdir(srcdir)
+    except: pass
+
     if len(sys.argv) == 1:
-        cmd = 'help'
-    else:
-        cmd = sys.argv[1]
+        help()
+        exit(0)
 
-    if cmd == 'help':   help()
-    elif cmd == 'list': list()
+    cmd = sys.argv[1]
 
-    elif cmd == 'install' and len(sys.argv) > 2:
-        # read local/share/envy_resource.json and find what to fetch
-        install(sys.argv[2])
+    if   cmd == 'help':  help()
+    elif cmd == 'list':  list()
+
+    elif cmd == 'remove':
+        for package in sys.argv[2:]: remove(package)
+
+    elif cmd == 'fetch':
+        for package in sys.argv[2:]: fetch(package)
+
+    elif cmd == 'install':
+        for package in sys.argv[2:]: install(package)
 
     else:
         print('no such command: %s' % cmd)
+        help()
