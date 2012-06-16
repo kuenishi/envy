@@ -39,3 +39,4 @@ Topics
 
 - for re2, --prefix= should be given to 'make' ; http://code.google.com/p/re2/issues/detail?id=22
 - for zookeeper, how --enable-zookeeper can be chosen from envy install
+- LPM http://www.kasahara.ws/lpm/ is very similar to and more stable than this system
