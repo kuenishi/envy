@@ -1,18 +1,20 @@
 {
-  "msgpack": "http://msgpack.org/releases/cpp/msgpack-0.5.7.tar.gz",
+    "msgpack": "http://msgpack.org/releases/cpp/msgpack-0.5.7.tar.gz",
 
-  "python3": "http://www.python.org/ftp/python/3.2.3/Python-3.2.3.tgz",
-  "ruby1.9": "http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.gz",
+    "python3": "https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz",
+    "python3.6": "https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz", 
+    "python3.2": "http://www.python.org/ftp/python/3.2.3/Python-3.2.3.tgz",
+    "ruby1.9": "http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.3-p194.tar.gz",
 
-  "pficommon": "https://github.com/pfi/pficommon/tarball/master",
-  "jubatus": "git://github.com/jubatus/jubatus.git",
+    "openblas": "http://github.com/xianyi/OpenBLAS/archive/v0.2.20.tar.gz",
+    "pficommon": "https://github.com/pfi/pficommon/tarball/master",
+    "jubatus": "git://github.com/jubatus/jubatus.git",
 
-  "pkgconfig":"http://pkgconfig.freedesktop.org/releases/pkg-config-0.26.tar.gz",
-  "zookeeper":"http://mirror.uoregon.edu/apache/zookeeper/zookeeper-3.4.3/zookeeper-3.4.3.tar.gz",
-  "libevent" :"https://github.com/downloads/libevent/libevent/libevent-2.0.19-stable.tar.gz",
-  "libglog"  :"http://google-glog.googlecode.com/files/glog-0.3.2.tar.gz",
+    "pkgconfig":"http://pkgconfig.freedesktop.org/releases/pkg-config-0.26.tar.gz",
+    "zookeeper":"http://mirror.uoregon.edu/apache/zookeeper/zookeeper-3.4.3/zookeeper-3.4.3.tar.gz",
+    "libevent" :"https://github.com/downloads/libevent/libevent/libevent-2.0.19-stable.tar.gz",
+    "libglog"  :"http://google-glog.googlecode.com/files/glog-0.3.2.tar.gz",
 
-  "mercurial": "http://mercurial.selenic.com/release/mercurial-2.2.2.tar.gz",
-  "re2": "hg://re2.googlecode.com/hg"
-
+    "mercurial": "http://mercurial.selenic.com/release/mercurial-2.2.2.tar.gz",
+    "re2": "hg://re2.googlecode.com/hg",
 }
